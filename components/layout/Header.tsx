@@ -14,9 +14,9 @@ export default function Header() {
     }
 
     return (
-    <header className="flex items-center justify-between border-b p-4">
-        <h1>{title}</h1>
-        <p>User</p>
-    </header>
+        <header className="flex items-center justify-between border-b p-4">
+            <h1>{title}</h1>
+            <p>User</p>
+        </header>
     );
 }
