@@ -82,7 +82,7 @@ export default function ProjectForm({
                     disabled={isDisabled}
                 />
                 {titleError !== "" && (
-                    <p id={titleErrorId} role="alert" className="mt-2 text-sm text-red-400">
+                    <p id={titleErrorId} role="alert" className="mt-2 text-sm text-danger">
                         {titleError}
                     </p>
                 )}
@@ -103,7 +103,7 @@ export default function ProjectForm({
             </label>
 
             {submitError !== "" && (
-                <p role="alert" className="text-sm text-red-400">
+                <p role="alert" className="text-sm text-danger">
                     {submitError}
                 </p>
             )}
@@ -124,7 +124,7 @@ export default function ProjectForm({
                     type="button"
                     onClick={onCancel}
                     disabled={isDisabled}
-                    className="min-h-11 w-full self-start text-sm text-gray-400 hover:text-gray-300 sm:w-auto"
+                    className="min-h-11 w-full self-start text-sm text-muted hover:text-foreground sm:w-auto"
                 >
                     Cancel
                 </button>

@@ -21,7 +21,7 @@ export default function DashboardLayout({
 
             <div className="min-w-0 flex-1">
                 <Header />
-                <main id="main-content" tabIndex={-1} className="p-4 md:p-6">
+                <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl p-4 md:p-8">
                     {children}
                 </main>
             </div>

@@ -77,7 +77,7 @@ export default function TaskForm({
                     className="min-w-0 w-full rounded-lg border p-3"
                 />
                 {titleError && (
-                    <p id={titleErrorId} role="alert" className="mt-2 text-red-400">
+                    <p id={titleErrorId} role="alert" className="mt-2 text-danger">
                         {titleError}
                     </p>
                 )}
@@ -98,7 +98,7 @@ export default function TaskForm({
             </div>
 
             {error && (
-                <p role="alert" className="text-red-400">
+                <p role="alert" className="text-danger">
                     {error}
                 </p>
             )}
@@ -119,7 +119,7 @@ export default function TaskForm({
                     type="button"
                     onClick={onCancel}
                     disabled={isDisabled}
-                    className="block min-h-11 w-full text-sm text-gray-400 hover:text-gray-300 sm:w-auto"
+                    className="block min-h-11 w-full text-sm text-muted hover:text-foreground sm:w-auto"
                 >
                     Cancel
                 </button>

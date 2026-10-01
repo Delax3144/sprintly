@@ -49,7 +49,7 @@ export default function DashboardPage() {
 
             <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {cards.map((card) => (
-                    <div key={card.label} className="rounded-lg border p-4">
+                    <div key={card.label} className="rounded-xl border bg-surface p-5 shadow-sm">
                         <dt className="text-sm">{card.label}</dt>
                         <dd className="mt-2 text-3xl font-semibold">
                             {card.count}

@@ -103,7 +103,7 @@ export default function ProjectsPage() {
             <h1>Projects</h1>
 
             {loadError !== "" && (
-                <p role="alert" className="mt-2 text-sm text-red-400">
+                <p role="alert" className="mt-2 text-sm text-danger">
                     {loadError}
                 </p>
             )}
@@ -121,7 +121,7 @@ export default function ProjectsPage() {
             />
 
             {deleteError !== "" && (
-                <p role="alert" className="mt-4 text-sm text-red-400">
+                <p role="alert" className="mt-4 text-sm text-danger">
                     {deleteError}
                 </p>
             )}

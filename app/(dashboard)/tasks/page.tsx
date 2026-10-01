@@ -154,13 +154,13 @@ function TasksContent() {
             ) : (
                 <ul className="space-y-4">
                     {filteredTasks.map((task) => (
-                        <li key={task.id} className="min-w-0 rounded-lg border p-4">
+                        <li key={task.id} className="min-w-0 rounded-xl border bg-surface p-5 shadow-sm">
                             <h2 className="font-semibold wrap-anywhere">{task.title}</h2>
                             <p className="mt-2 whitespace-pre-wrap wrap-anywhere">{task.description}</p>
 
                             <Link
                                 href={`/projects/${encodeURIComponent(task.projectId)}`}
-                                className="mt-3 inline-block text-sm text-blue-400 hover:text-blue-300 wrap-anywhere"
+                                className="mt-3 inline-block text-sm text-accent hover:text-accent-hover wrap-anywhere"
                             >
                                 {task.projectTitle}
                             </Link>

@@ -15,7 +15,7 @@ export default async function ProjectPage({
         <div className="space-y-4">
             <Link
                 href="/projects"
-                className="inline-block text-blue-400 transition-colors hover:text-blue-300"
+                className="inline-block text-accent transition-colors hover:text-accent-hover"
             >
                 ← Back to projects
             </Link>
