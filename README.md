@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sprintly
 
-## Getting Started
+Учебный проект для управления проектами и задачами.
 
-First, run the development server:
+## Возможности
 
-```bash
+- Создание, редактирование и удаление проектов.
+- Страница отдельного проекта.
+- Создание задач внутри проекта и смена статуса: Todo, In progress, Done.
+- Сохранение данных в SQLite.
+- Загрузка данных и обновление кеша через RTK Query.
+- Валидация запросов, состояния загрузки и сообщения об ошибках.
+
+Dashboard и My Tasks пока содержат заглушки. Редактирование и удаление задач, фильтры и авторизация ещё не реализованы.
+
+## Технологии
+
+Next.js App Router, React, TypeScript, Redux Toolkit / RTK Query, Tailwind CSS, better-sqlite3.
+
+## Локальный запуск
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте http://localhost:3000. База `data/sprintly.db` и таблицы создаются автоматически при первом обращении к API. Локальные данные исключены из Git.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+При удалении проекта удаляются и его задачи. Для размещения приложения нужен Node.js сервер с постоянным диском для SQLite.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Проверки
 
-## Learn More
+```sh
+npm run lint
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## API
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Метод | Адрес | Действие |
+| --- | --- | --- |
+| GET, POST | `/api/projects` | Список и создание проектов |
+| GET, PATCH, DELETE | `/api/projects/[id]` | Получение, изменение и удаление проекта |
+| GET, POST | `/api/projects/[id]/tasks` | Список и создание задач проекта |
+| PATCH | `/api/tasks/[id]` | Изменение статуса задачи |

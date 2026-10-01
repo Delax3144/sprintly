@@ -32,14 +32,14 @@ export const projectsApi = createApi({
                 method: "PATCH",
                 body: { title, description },
             }),
-                invalidatesTags: ["Projects"],
+            invalidatesTags: ["Projects"],
         }),
         deleteProject: builder.mutation<void, string>({
             query: (id) => ({
                 url: `projects/${encodeURIComponent(id)}`,
                 method: "DELETE",
             }),
-                invalidatesTags: ["Projects"],
+            invalidatesTags: ["Projects"],
         }),
         getProject: builder.query<Project, string>({
             query: (id) => `projects/${encodeURIComponent(id)}`,
