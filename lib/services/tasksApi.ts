@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { projectsApi } from "@/lib/services/projectsApi";
 import type { Task } from "@/types/task";
 
 type CreateTaskInput = {
@@ -33,6 +34,14 @@ export const tasksApi = createApi({
                 body: { title, description },
             }),
             invalidatesTags: ["Tasks"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(projectsApi.util.invalidateTags(["Dashboard"]));
+                } catch {
+                    // Ошибку запроса показывает форма.
+                }
+            },
         }),
         updateTaskStatus: builder.mutation<Task, UpdateTaskStatusInput>({
             query: ({ id, status }) => ({
@@ -41,6 +50,14 @@ export const tasksApi = createApi({
                 body: { status },
             }),
             invalidatesTags: ["Tasks"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(projectsApi.util.invalidateTags(["Dashboard"]));
+                } catch {
+                    // Ошибку запроса показывает форма.
+                }
+            },
         }),
         deleteTask: builder.mutation<void, string>({
             query: (id) => ({
@@ -48,6 +65,14 @@ export const tasksApi = createApi({
                 method: "DELETE",
             }),
             invalidatesTags: ["Tasks"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(projectsApi.util.invalidateTags(["Dashboard"]));
+                } catch {
+                    // Ошибку запроса показывает форма.
+                }
+            },
         }),
         updateTask: builder.mutation<Task, UpdateTaskInput>({
             query: ({ id, title, description }) => ({

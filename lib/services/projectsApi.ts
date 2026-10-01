@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Project } from "@/types/project";
+import type { DashboardSummary } from "@/types/dashboard";
 
 export const projectsApi = createApi({
     reducerPath: "projectsApi",
@@ -8,7 +9,7 @@ export const projectsApi = createApi({
         baseUrl: "/api/",
     }),
 
-    tagTypes: ["Projects"],
+    tagTypes: ["Projects", "Dashboard"],
 
     endpoints: (builder) => ({
         getProjects: builder.query<Project[], void>({
@@ -24,7 +25,7 @@ export const projectsApi = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: ["Projects"],
+            invalidatesTags: ["Projects", "Dashboard"],
         }),
         updateProject: builder.mutation<Project, Project>({
             query: ({ id, title, description }) => ({
@@ -32,18 +33,22 @@ export const projectsApi = createApi({
                 method: "PATCH",
                 body: { title, description },
             }),
-            invalidatesTags: ["Projects"],
+            invalidatesTags: ["Projects", "Dashboard"],
         }),
         deleteProject: builder.mutation<void, string>({
             query: (id) => ({
                 url: `projects/${encodeURIComponent(id)}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["Projects"],
+            invalidatesTags: ["Projects", "Dashboard"],
         }),
         getProject: builder.query<Project, string>({
             query: (id) => `projects/${encodeURIComponent(id)}`,
             providesTags: ["Projects"],
+        }),
+        getDashboardSummary: builder.query<DashboardSummary, void>({
+            query: () => "dashboard",
+            providesTags: ["Dashboard"],
         }),
     }),
 });
@@ -54,4 +59,5 @@ export const {
     useUpdateProjectMutation,
     useDeleteProjectMutation,
     useGetProjectQuery,
+    useGetDashboardSummaryQuery,
 } = projectsApi;
