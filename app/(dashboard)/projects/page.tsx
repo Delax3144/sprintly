@@ -15,6 +15,7 @@ export default function ProjectsPage() {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const [loadAttempt, setLoadAttempt] = useState(0);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
 
     const isBusy = isLoading || isCreating || deletingId !== null;
 
@@ -108,6 +109,9 @@ export default function ProjectsPage() {
             setProjects((currentProjects) =>
                 currentProjects.filter((project) => project.id !== id)
             );
+            if (editingProject?.id === id) {
+                setEditingProject(null);
+            }
         } catch (error) {
             console.error("Could not delete project:", error);
             setDeleteError("Could not delete project. Please try again.");
@@ -126,6 +130,46 @@ export default function ProjectsPage() {
         setLoadAttempt((currentAttempt) => currentAttempt + 1);
     }
 
+    async function handleUpdateProject(
+        title: string,
+        description: string
+    ) {
+    if (editingProject === null || isBusy) {
+        throw new Error("Cannot update project right now.");
+    }
+
+    setIsCreating(true);
+
+    try {
+        const response = await fetch(
+            `/api/projects/${encodeURIComponent(editingProject.id)}`,
+            {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ title, description }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Could not update project.");
+        }
+
+        const updatedProject: Project = await response.json();
+
+        setProjects((currentProjects) =>
+            currentProjects.map((project) =>
+                project.id === updatedProject.id ? updatedProject : project
+            )
+        );
+
+        setEditingProject(null);
+        } finally {
+            setIsCreating(false);
+        }
+    }
+
     return (
         <div>
             <h1>Projects</h1>
@@ -137,8 +181,15 @@ export default function ProjectsPage() {
             )}
 
             <ProjectForm
-                onAdd={handleAddProject}
+                key={editingProject?.id ?? "create"}
+                initialProject={editingProject}
+                onSave={
+                    editingProject === null
+                        ? handleAddProject
+                        : handleUpdateProject
+                }
                 disabled={isBusy || loadError !== ""}
+                onCancel={() => setEditingProject(null)}
             />
 
             {deleteError !== "" && (
@@ -170,6 +221,7 @@ export default function ProjectsPage() {
                         onDelete={() => handleDeleteProject(project.id)}
                         isDeleting={deletingId === project.id}
                         isDeleteDisabled={isBusy}
+                        onEdit={() => setEditingProject(project)}
                     />
                 ))
                 )}
