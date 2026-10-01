@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import type { Project } from "@/types/project";
 
 type ProjectFormProps = {
-    onAdd: (title: string, description: string) => Promise<void>;
+    onSave: (title: string, description: string) => Promise<void>;
     disabled: boolean;
+    initialProject: Project | null;
+    onCancel: () => void;
 };
 
-export default function ProjectForm({ onAdd, disabled }: ProjectFormProps) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+export default function ProjectForm({ onSave, disabled, initialProject, onCancel }: ProjectFormProps) {
+    const [title, setTitle] = useState(initialProject?.title ?? "");
+    const [description, setDescription] = useState(initialProject?.description ?? "");
     const [titleError, setTitleError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
@@ -37,7 +40,7 @@ export default function ProjectForm({ onAdd, disabled }: ProjectFormProps) {
         setIsSubmitting(true);
 
         try {
-            await onAdd(trimmedTitle, trimmedDescription);
+            await onSave(trimmedTitle, trimmedDescription);
 
             setTitle("");
             setDescription("");
@@ -98,8 +101,22 @@ export default function ProjectForm({ onAdd, disabled }: ProjectFormProps) {
                 disabled={isDisabled}
                 className="self-start rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-wait disabled:opacity-50"
             >
-                {isSubmitting ? "Saving…" : "Add project"}
+                {isSubmitting
+                    ? "Saving…"
+                    : initialProject !== null
+                        ? "Save changes"
+                        : "Add project"}
             </button>
+            {initialProject !== null && (
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    disabled={isDisabled}
+                    className="self-start text-sm text-gray-400 hover:text-gray-300"
+                >
+                    Cancel
+                </button>
+            )}
         </form>
     );
 }
