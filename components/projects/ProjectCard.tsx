@@ -1,6 +1,9 @@
+import Link from "next/link";
+
 type ProjectCardProps = {
     title: string;
     description: string;
+    id: string;
     onDelete: () => void;
     isDeleting: boolean;
     isDeleteDisabled: boolean;
@@ -8,11 +11,18 @@ type ProjectCardProps = {
 };
 
 export default function ProjectCard({
-    title, description, onDelete, isDeleting, isDeleteDisabled, onEdit
+    title, description, id, onDelete, isDeleting, isDeleteDisabled, onEdit
 }: ProjectCardProps) {
     return (
         <article className="rounded-lg border p-4">
-            <h2 className="text-lg font-semibold">{title}</h2>
+            <h2 className="text-lg font-semibold">
+                <Link
+                    href={`/projects/${encodeURIComponent(id)}`}
+                    className="transition-colors hover:text-blue-500"
+                >
+                    {title}
+                </Link>
+            </h2>
             <p className="mt-2 text-sm">{description}</p>
             <button
                 type="button"

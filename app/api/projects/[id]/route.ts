@@ -1,12 +1,14 @@
 import db from "@/lib/db";
 
-type DeleteProjectContext = {
+import type { Project } from "@/types/project";
+
+type ProjectRouteContext = {
     params: Promise<{ id: string }>;
 };
 
 export async function DELETE(
     request: Request,
-    context: DeleteProjectContext
+    context: ProjectRouteContext
 ) {
     const { id } = await context.params;
 
@@ -26,7 +28,7 @@ export async function DELETE(
 
 export async function PATCH(
     request: Request,
-    context: DeleteProjectContext
+    context: ProjectRouteContext
 ) {
     const { id } = await context.params;
 
@@ -85,4 +87,26 @@ export async function PATCH(
         title,
         description,
     });
+}
+
+export async function GET(
+    request: Request,
+    context: ProjectRouteContext
+) {
+    const { id } = await context.params;
+
+    const project = db
+        .prepare<[string], Project>(
+            "SELECT id, title, description FROM projects WHERE id = ?"
+        )
+        .get(id);
+
+    if (!project) {
+        return Response.json(
+            { error: "Project not found." },
+            { status: 404 }
+        );
+    }
+
+    return Response.json(project);
 }

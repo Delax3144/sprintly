@@ -41,6 +41,10 @@ export const projectsApi = createApi({
             }),
                 invalidatesTags: ["Projects"],
         }),
+        getProject: builder.query<Project, string>({
+            query: (id) => `projects/${encodeURIComponent(id)}`,
+            providesTags: ["Projects"],
+        }),
     }),
 });
 
@@ -49,4 +53,5 @@ export const {
     useCreateProjectMutation,
     useUpdateProjectMutation,
     useDeleteProjectMutation,
+    useGetProjectQuery,
 } = projectsApi;

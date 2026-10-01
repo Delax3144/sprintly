@@ -145,6 +145,7 @@ export default function ProjectsPage() {
                         <ProjectCard
                             key={project.id}
                             title={project.title}
+                            id={project.id}
                             description={project.description}
                             onDelete={() => handleDeleteProject(project.id)}
                             isDeleting={deletingId === project.id}
