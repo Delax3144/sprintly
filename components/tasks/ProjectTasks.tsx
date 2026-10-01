@@ -274,6 +274,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                             </label>
                             <select
                                 id={`task-status-${task.id}`}
+                                aria-label={`Status for task: ${task.title}`}
                                 value={task.status}
                                 disabled={isBusy}
                                 onChange={(event) => {
@@ -296,6 +297,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                             <button
                                 type="button"
                                 onClick={() => setEditingTask(task)}
+                                aria-label={`Edit task: ${task.title}`}
                                 disabled={isBusy}
                                 className="mt-3 block min-h-11 text-sm text-blue-400 hover:text-blue-300 disabled:opacity-50"
                             >
@@ -304,6 +306,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                             <button
                                 type="button"
                                 onClick={() => void handleDeleteTask(task.id)}
+                                aria-label={`Delete task: ${task.title}`}
                                 disabled={isBusy}
                                 className="mt-3 block min-h-11 text-sm text-red-400 transition-colors hover:text-red-300 disabled:opacity-50"
                             >

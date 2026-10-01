@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import type { Project } from "@/types/project";
 
 type ProjectFormProps = {
@@ -16,6 +16,8 @@ export default function ProjectForm({
     initialProject,
     onCancel,
 }: ProjectFormProps) {
+    const titleErrorId = useId();
+    const titleInputRef = useRef<HTMLInputElement>(null);
     const [title, setTitle] = useState(initialProject?.title ?? "");
     const [description, setDescription] = useState(initialProject?.description ?? "");
     const [titleError, setTitleError] = useState("");
@@ -38,6 +40,7 @@ export default function ProjectForm({
 
         if (trimmedTitle === "") {
             setTitleError("Enter a project name.");
+            titleInputRef.current?.focus();
             return;
         }
 
@@ -69,13 +72,17 @@ export default function ProjectForm({
 
                 <input
                     type="text"
+                    ref={titleInputRef}
+                    aria-required="true"
+                    aria-invalid={titleError !== ""}
+                    aria-describedby={titleError ? titleErrorId : undefined}
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
                     className="min-w-0 w-full rounded-lg border px-3 py-2"
                     disabled={isDisabled}
                 />
                 {titleError !== "" && (
-                    <p role="alert" className="mt-2 text-sm text-red-400">
+                    <p id={titleErrorId} role="alert" className="mt-2 text-sm text-red-400">
                         {titleError}
                     </p>
                 )}
