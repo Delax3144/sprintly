@@ -33,6 +33,7 @@ export default function ProjectCard({
             <button
                 type="button"
                 onClick={onEdit}
+                aria-label={`Edit project: ${title}`}
                 disabled={isDeleteDisabled}
                 className="mr-4 mt-4 text-sm text-blue-400 hover:text-blue-300"
             >
@@ -41,6 +42,7 @@ export default function ProjectCard({
             <button
                 type="button"
                 onClick={onDelete}
+                aria-label={`Delete project: ${title}`}
                 disabled={isDeleteDisabled}
                 className="mt-4 text-sm text-red-400 transition-colors hover:text-red-300"
             >

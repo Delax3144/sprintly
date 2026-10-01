@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 
 import type { Task } from "@/types/task";
 
@@ -17,6 +17,9 @@ export default function TaskForm({
     initialTask = null,
     onCancel,
 }: TaskFormProps) {
+    const titleErrorId = useId();
+    const titleInputRef = useRef<HTMLInputElement>(null);
+    const [titleError, setTitleError] = useState("");
     const [title, setTitle] = useState(initialTask?.title ?? "");
     const [description, setDescription] = useState(
         initialTask?.description ?? ""
@@ -34,13 +37,15 @@ export default function TaskForm({
         }
 
         const trimmedTitle = title.trim();
+        setError("");
 
         if (!trimmedTitle) {
-            setError("Title is required.");
+            setTitleError("Title is required.");
+            titleInputRef.current?.focus();
             return;
         }
 
-        setError("");
+        setTitleError("");
         setIsSubmitting(true);
 
         try {
@@ -62,11 +67,20 @@ export default function TaskForm({
                 </label>
                 <input
                     id="task-title"
+                    ref={titleInputRef}
+                    aria-required="true"
+                    aria-invalid={titleError !== ""}
+                    aria-describedby={titleError ? titleErrorId : undefined}
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
                     disabled={isDisabled}
                     className="min-w-0 w-full rounded-lg border p-3"
                 />
+                {titleError && (
+                    <p id={titleErrorId} role="alert" className="mt-2 text-red-400">
+                        {titleError}
+                    </p>
+                )}
             </div>
 
             <div>

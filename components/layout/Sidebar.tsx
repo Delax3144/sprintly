@@ -10,9 +10,10 @@ export default function Sidebar() {
         <aside className="shrink-0 border-b p-4 md:w-60 md:border-r md:border-b-0">
             <h2>Sprintly</h2>
 
-            <nav className="mt-4 flex flex-wrap gap-3 md:flex-col md:gap-2">
+            <nav aria-label="Main navigation" className="mt-4 flex flex-wrap gap-3 md:flex-col md:gap-2">
                 <Link
                     href="/"
+                    aria-current={pathname === "/" ? "page" : undefined}
                     className={`transition-colors duration-200 hover:text-blue-300 ${
                         pathname === "/" ? "text-blue-500" : ""
                     }`}
@@ -21,6 +22,13 @@ export default function Sidebar() {
                 </Link>
                 <Link
                     href="/projects"
+                    aria-current={
+                        pathname === "/projects"
+                            ? "page"
+                            : pathname.startsWith("/projects/")
+                                ? "location"
+                                : undefined
+                    }
                     className={`transition-colors duration-200 hover:text-blue-300 ${
                         pathname === "/projects" || pathname.startsWith("/projects/")
                             ? "text-blue-500"
@@ -31,6 +39,7 @@ export default function Sidebar() {
                 </Link>
                 <Link
                     href="/tasks"
+                    aria-current={pathname === "/tasks" ? "page" : undefined}
                     className={`transition-colors duration-200 hover:text-blue-300 ${
                         pathname === "/tasks" ? "text-blue-500" : ""
                     }`}
