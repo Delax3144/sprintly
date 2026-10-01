@@ -60,7 +60,7 @@ export default function ProjectForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="mt-4 flex max-w-md flex-col gap-4"
+            className="mt-4 flex w-full min-w-0 max-w-md flex-col gap-4"
         >
             <label className="block">
                 <span className="mb-2 block text-sm font-medium">
@@ -71,7 +71,7 @@ export default function ProjectForm({
                     type="text"
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    className="w-full rounded-lg border px-3 py-2"
+                    className="min-w-0 w-full rounded-lg border px-3 py-2"
                     disabled={isDisabled}
                 />
                 {titleError !== "" && (
@@ -90,7 +90,7 @@ export default function ProjectForm({
                     rows={3}
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
-                    className="w-full resize-y rounded-lg border px-3 py-2"
+                    className="min-w-0 w-full resize-y rounded-lg border px-3 py-2"
                     disabled={isDisabled}
                 />
             </label>
@@ -104,7 +104,7 @@ export default function ProjectForm({
             <button
                 type="submit"
                 disabled={isDisabled}
-                className="self-start rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-wait disabled:opacity-50"
+                className="min-h-11 w-full self-start rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-wait disabled:opacity-50 sm:w-auto"
             >
                 {isSubmitting
                     ? "Saving…"
@@ -117,7 +117,7 @@ export default function ProjectForm({
                     type="button"
                     onClick={onCancel}
                     disabled={isDisabled}
-                    className="self-start text-sm text-gray-400 hover:text-gray-300"
+                    className="min-h-11 w-full self-start text-sm text-gray-400 hover:text-gray-300 sm:w-auto"
                 >
                     Cancel
                 </button>

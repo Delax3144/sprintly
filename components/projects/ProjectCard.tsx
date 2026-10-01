@@ -20,8 +20,8 @@ export default function ProjectCard({
     onEdit,
 }: ProjectCardProps) {
     return (
-        <article className="rounded-lg border p-4">
-            <h2 className="text-lg font-semibold">
+        <article className="min-w-0 rounded-lg border p-4">
+            <h2 className="text-lg font-semibold wrap-anywhere">
                 <Link
                     href={`/projects/${encodeURIComponent(id)}`}
                     className="transition-colors hover:text-blue-500"
@@ -29,7 +29,7 @@ export default function ProjectCard({
                     {title}
                 </Link>
             </h2>
-            <p className="mt-2 text-sm">{description}</p>
+            <p className="mt-2 whitespace-pre-wrap text-sm wrap-anywhere">{description}</p>
             <button
                 type="button"
                 onClick={onEdit}

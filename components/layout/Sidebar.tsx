@@ -7,10 +7,10 @@ export default function Sidebar() {
     const pathname = usePathname();
 
     return (
-        <aside className="w-60 shrink-0 border-r p-4">
+        <aside className="shrink-0 border-b p-4 md:w-60 md:border-r md:border-b-0">
             <h2>Sprintly</h2>
 
-            <nav className="mt-4 flex flex-col gap-2">
+            <nav className="mt-4 flex flex-wrap gap-3 md:flex-col md:gap-2">
                 <Link
                     href="/"
                     className={`transition-colors duration-200 hover:text-blue-300 ${

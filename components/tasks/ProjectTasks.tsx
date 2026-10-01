@@ -187,7 +187,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                     onChange={(event) =>
                         handleFilterChange(event.target.value)
                     }
-                    className="rounded-lg border bg-background p-2"
+                    className="min-h-11 w-full rounded-lg border bg-background p-2 sm:w-auto"
                 >
                     <option value="all">All statuses</option>
                     <option value="todo">Todo</option>
@@ -197,7 +197,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
             </div>
 
             <form
-                className="flex max-w-xl gap-2"
+                className="flex w-full max-w-xl flex-col gap-2 sm:flex-row"
                 onSubmit={(event) => {
                     event.preventDefault();
 
@@ -226,11 +226,11 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                     aria-label="Search tasks by title"
                     defaultValue={searchQuery}
                     placeholder="Search tasks..."
-                    className="min-w-0 flex-1 rounded-lg border p-2"
+                    className="min-h-11 min-w-0 w-full rounded-lg border p-2 sm:flex-1"
                 />
                 <button
                     type="submit"
-                    className="rounded-lg border px-4 py-2"
+                    className="min-h-11 shrink-0 rounded-lg border px-4 py-2"
                 >
                     Search
                 </button>
@@ -263,9 +263,9 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
             ) : (
                 <ul className="space-y-3">
                     {filteredTasks.map((task) => (
-                        <li key={task.id} className="rounded-lg border p-4">
-                            <h3 className="font-semibold">{task.title}</h3>
-                            <p>{task.description}</p>
+                        <li key={task.id} className="min-w-0 rounded-lg border p-4">
+                            <h3 className="font-semibold wrap-anywhere">{task.title}</h3>
+                            <p className="whitespace-pre-wrap wrap-anywhere">{task.description}</p>
                             <label
                                 htmlFor={`task-status-${task.id}`}
                                 className="mt-3 block text-sm"
@@ -287,7 +287,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                                         void handleStatusChange(task.id, status);
                                     }
                                 }}
-                                className="mt-1 rounded-lg border bg-background p-2"
+                                className="mt-1 min-h-11 w-full rounded-lg border bg-background p-2 sm:w-auto"
                             >
                                 <option value="todo">Todo</option>
                                 <option value="in_progress">In progress</option>
@@ -297,7 +297,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                                 type="button"
                                 onClick={() => setEditingTask(task)}
                                 disabled={isBusy}
-                                className="mt-3 block text-sm text-blue-400 hover:text-blue-300 disabled:opacity-50"
+                                className="mt-3 block min-h-11 text-sm text-blue-400 hover:text-blue-300 disabled:opacity-50"
                             >
                                 Edit
                             </button>
@@ -305,7 +305,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                                 type="button"
                                 onClick={() => void handleDeleteTask(task.id)}
                                 disabled={isBusy}
-                                className="mt-3 block text-sm text-red-400 transition-colors hover:text-red-300 disabled:opacity-50"
+                                className="mt-3 block min-h-11 text-sm text-red-400 transition-colors hover:text-red-300 disabled:opacity-50"
                             >
                                 {deletingId === task.id ? "Deleting..." : "Delete"}
                             </button>

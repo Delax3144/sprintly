@@ -53,8 +53,12 @@ export default function ProjectDetails({ id }: ProjectDetailsProps) {
 
     return (
         <div>
-            <h1>{project.title}</h1>
-            <p>{project.description}</p>
+            <h1 className="text-2xl font-semibold wrap-anywhere">
+                {project.title}
+            </h1>
+            <p className="mt-2 whitespace-pre-wrap wrap-anywhere">
+                {project.description}
+            </p>
             <ProjectTasks key={project.id} projectId={project.id} />
         </div>
     );

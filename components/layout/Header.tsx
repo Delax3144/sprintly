@@ -16,7 +16,7 @@ export default function Header() {
     }
 
     return (
-        <header className="flex items-center justify-between border-b p-4">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
             <p>{title}</p>
             <p>User</p>
         </header>

@@ -98,7 +98,7 @@ function TasksContent() {
                     onChange={(event) =>
                         handleFilterChange(event.target.value)
                     }
-                    className="rounded-lg border bg-background p-2"
+                    className="min-h-11 w-full rounded-lg border bg-background p-2 sm:w-auto"
                 >
                     <option value="all">All statuses</option>
                     <option value="todo">Todo</option>
@@ -108,7 +108,7 @@ function TasksContent() {
             </div>
 
             <form
-                className="flex max-w-xl gap-2"
+                className="flex w-full max-w-xl flex-col gap-2 sm:flex-row"
                 onSubmit={(event) => {
                     event.preventDefault();
 
@@ -137,11 +137,11 @@ function TasksContent() {
                     aria-label="Search tasks by title"
                     defaultValue={searchQuery}
                     placeholder="Search tasks..."
-                    className="min-w-0 flex-1 rounded-lg border p-2"
+                    className="min-h-11 min-w-0 w-full rounded-lg border p-2 sm:flex-1"
                 />
                 <button
                     type="submit"
-                    className="rounded-lg border px-4 py-2"
+                    className="min-h-11 shrink-0 rounded-lg border px-4 py-2"
                 >
                     Search
                 </button>
@@ -154,13 +154,13 @@ function TasksContent() {
             ) : (
                 <ul className="space-y-4">
                     {filteredTasks.map((task) => (
-                        <li key={task.id} className="rounded-lg border p-4">
-                            <h2 className="font-semibold">{task.title}</h2>
-                            <p className="mt-2">{task.description}</p>
+                        <li key={task.id} className="min-w-0 rounded-lg border p-4">
+                            <h2 className="font-semibold wrap-anywhere">{task.title}</h2>
+                            <p className="mt-2 whitespace-pre-wrap wrap-anywhere">{task.description}</p>
 
                             <Link
                                 href={`/projects/${encodeURIComponent(task.projectId)}`}
-                                className="mt-3 inline-block text-sm text-blue-400 hover:text-blue-300"
+                                className="mt-3 inline-block text-sm text-blue-400 hover:text-blue-300 wrap-anywhere"
                             >
                                 {task.projectTitle}
                             </Link>
