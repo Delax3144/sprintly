@@ -2,12 +2,22 @@
 
 import { useGetProjectQuery } from "@/lib/services/projectsApi";
 
+import ProjectTasks from "@/components/tasks/ProjectTasks";
+
 type ProjectDetailsProps = {
     id: string;
 };
 
 export default function ProjectDetails({ id }: ProjectDetailsProps) {
-    const { data: project, isLoading, error } = useGetProjectQuery(id);
+    const {
+        currentData: project,
+        isLoading,
+        isFetching,
+        error,
+        refetch,
+    } = useGetProjectQuery(id, {
+        refetchOnMountOrArgChange: true,
+    });
 
     if (isLoading) {
         return <p>Loading project...</p>;
@@ -18,10 +28,26 @@ export default function ProjectDetails({ id }: ProjectDetailsProps) {
             return <p>Project not found.</p>;
         }
 
-        return <p>Could not load project.</p>;
+        return (
+            <div className="space-y-3">
+                <p role="alert">Could not load project.</p>
+                <button
+                    type="button"
+                    onClick={() => void refetch()}
+                    disabled={isFetching}
+                    className="rounded-lg border px-4 py-2 disabled:opacity-50"
+                >
+                    {isFetching ? "Loading..." : "Retry"}
+                </button>
+            </div>
+        );
     }
 
     if (!project) {
+        if (isFetching) {
+            return <p>Loading project...</p>;
+        }
+
         return <p>Project not found.</p>;
     }
 
@@ -29,6 +55,7 @@ export default function ProjectDetails({ id }: ProjectDetailsProps) {
         <div>
             <h1>{project.title}</h1>
             <p>{project.description}</p>
+            <ProjectTasks key={project.id} projectId={project.id} />
         </div>
     );
 }

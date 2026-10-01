@@ -9,13 +9,15 @@ export default function Header() {
 
     if (pathname === "/projects") {
         title = "Projects";
+    } else if (pathname.startsWith("/projects/")) {
+        title = "Project details";
     } else if (pathname === "/tasks") {
         title = "My Tasks";
     }
 
     return (
         <header className="flex items-center justify-between border-b p-4">
-            <h1>{title}</h1>
+            <p>{title}</p>
             <p>User</p>
         </header>
     );

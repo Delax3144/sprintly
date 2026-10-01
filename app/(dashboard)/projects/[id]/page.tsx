@@ -12,15 +12,15 @@ export default async function ProjectPage({
     const { id } = await params;
 
     return (
-    <div className="space-y-4">
-        <Link
-            href="/projects"
-            className="inline-block text-blue-400 transition-colors hover:text-blue-300"
-        >
-            ← Back to projects
-        </Link>
+        <div className="space-y-4">
+            <Link
+                href="/projects"
+                className="inline-block text-blue-400 transition-colors hover:text-blue-300"
+            >
+                ← Back to projects
+            </Link>
 
-        <ProjectDetails id={id} />
-    </div>
+            <ProjectDetails id={id} />
+        </div>
     );
 }

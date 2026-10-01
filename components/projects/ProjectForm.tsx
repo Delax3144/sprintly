@@ -10,7 +10,12 @@ type ProjectFormProps = {
     onCancel: () => void;
 };
 
-export default function ProjectForm({ onSave, disabled, initialProject, onCancel }: ProjectFormProps) {
+export default function ProjectForm({
+    onSave,
+    disabled,
+    initialProject,
+    onCancel,
+}: ProjectFormProps) {
     const [title, setTitle] = useState(initialProject?.title ?? "");
     const [description, setDescription] = useState(initialProject?.description ?? "");
     const [titleError, setTitleError] = useState("");
@@ -45,8 +50,8 @@ export default function ProjectForm({ onSave, disabled, initialProject, onCancel
             setTitle("");
             setDescription("");
         } catch (error) {
-            console.error("Could not create project", error);
-            setSubmitError("Could not create project. Please try again.");
+            console.error("Could not save project", error);
+            setSubmitError("Could not save project. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
@@ -59,7 +64,7 @@ export default function ProjectForm({ onSave, disabled, initialProject, onCancel
         >
             <label className="block">
                 <span className="mb-2 block text-sm font-medium">
-                Project name
+                    Project name
                 </span>
 
                 <input

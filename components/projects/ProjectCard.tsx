@@ -11,7 +11,13 @@ type ProjectCardProps = {
 };
 
 export default function ProjectCard({
-    title, description, id, onDelete, isDeleting, isDeleteDisabled, onEdit
+    title,
+    description,
+    id,
+    onDelete,
+    isDeleting,
+    isDeleteDisabled,
+    onEdit,
 }: ProjectCardProps) {
     return (
         <article className="rounded-lg border p-4">
