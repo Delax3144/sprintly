@@ -55,7 +55,7 @@ export default function TaskForm({
     }
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-xl space-y-4">
+        <form onSubmit={handleSubmit} className="w-full min-w-0 max-w-xl space-y-4">
             <div>
                 <label htmlFor="task-title" className="mb-2 block">
                     Task name
@@ -65,7 +65,7 @@ export default function TaskForm({
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
                     disabled={isDisabled}
-                    className="w-full rounded-lg border p-3"
+                    className="min-w-0 w-full rounded-lg border p-3"
                 />
             </div>
 
@@ -79,7 +79,7 @@ export default function TaskForm({
                     onChange={(event) => setDescription(event.target.value)}
                     disabled={isDisabled}
                     rows={3}
-                    className="w-full rounded-lg border p-3"
+                    className="min-w-0 w-full resize-y rounded-lg border p-3"
                 />
             </div>
 
@@ -92,7 +92,7 @@ export default function TaskForm({
             <button
                 type="submit"
                 disabled={isDisabled}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+                className="min-h-11 w-full rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opacity-50 sm:w-auto"
             >
                 {isSubmitting
                     ? "Saving..."
@@ -105,7 +105,7 @@ export default function TaskForm({
                     type="button"
                     onClick={onCancel}
                     disabled={isDisabled}
-                    className="block text-sm text-gray-400 hover:text-gray-300"
+                    className="block min-h-11 w-full text-sm text-gray-400 hover:text-gray-300 sm:w-auto"
                 >
                     Cancel
                 </button>
