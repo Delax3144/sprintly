@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import ThemeToggle from "@/components/layout/ThemeToggle";
 
 export default function Header() {
     const pathname = usePathname();
@@ -16,9 +17,9 @@ export default function Header() {
     }
 
     return (
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
-            <p>{title}</p>
-            <p>User</p>
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b bg-surface px-4 py-3 md:px-8">
+            <p className="font-semibold">{title}</p>
+            <ThemeToggle />
         </header>
     );
 }

@@ -20,11 +20,11 @@ export default function ProjectCard({
     onEdit,
 }: ProjectCardProps) {
     return (
-        <article className="min-w-0 rounded-lg border p-4">
+        <article className="min-w-0 rounded-xl border bg-surface p-5 shadow-sm">
             <h2 className="text-lg font-semibold wrap-anywhere">
                 <Link
                     href={`/projects/${encodeURIComponent(id)}`}
-                    className="transition-colors hover:text-blue-500"
+                    className="transition-colors hover:text-accent"
                 >
                     {title}
                 </Link>
@@ -35,7 +35,7 @@ export default function ProjectCard({
                 onClick={onEdit}
                 aria-label={`Edit project: ${title}`}
                 disabled={isDeleteDisabled}
-                className="mr-4 mt-4 text-sm text-blue-400 hover:text-blue-300"
+                className="mr-4 mt-4 text-sm text-accent hover:text-accent-hover"
             >
                 Edit
             </button>
@@ -44,7 +44,7 @@ export default function ProjectCard({
                 onClick={onDelete}
                 aria-label={`Delete project: ${title}`}
                 disabled={isDeleteDisabled}
-                className="mt-4 text-sm text-red-400 transition-colors hover:text-red-300"
+                className="mt-4 text-sm text-danger transition-colors hover:text-danger-hover"
             >
                 {isDeleting ? "Deleting…" : "Delete"}
             </button>

@@ -1,20 +1,49 @@
 @import "tailwindcss";
 
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    color-scheme: light;
+    --background: #f4f6fb;
+    --foreground: #1c263b;
+    --surface: #ffffff;
+    --surface-hover: #edf1f8;
+    --border: #dce3ee;
+    --muted: #59677e;
+    --accent: #4338ca;
+    --accent-hover: #3730a3;
+    --accent-soft: #eeecff;
+    --danger: #b4233e;
+    --danger-hover: #911c32;
+    --focus: #6366f1;
 }
 
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
+    --color-surface: var(--surface);
+    --color-surface-hover: var(--surface-hover);
+    --color-border: var(--border);
+    --color-muted: var(--muted);
+    --color-accent: var(--accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-accent-soft: var(--accent-soft);
+    --color-danger: var(--danger);
+    --color-danger-hover: var(--danger-hover);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --background: #101522;
+    --foreground: #e7edf7;
+    --surface: #192131;
+    --surface-hover: #232e42;
+    --border: #334058;
+    --muted: #a6b2c8;
+    --accent: #b5adff;
+    --accent-hover: #d0caff;
+    --accent-soft: #302b52;
+    --danger: #ff94a5;
+    --danger-hover: #ffbdc8;
+    --focus: #b5adff;
 }
 
 body {
@@ -23,7 +52,32 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+@layer base {
+    *, ::before, ::after {
+        border-color: var(--border);
+    }
+
+    input, textarea, select {
+        background-color: var(--surface);
+        color: var(--foreground);
+    }
+
+    input::placeholder, textarea::placeholder {
+        color: var(--muted);
+        opacity: 1;
+    }
+
+    button:not(:disabled), select:not(:disabled) {
+        cursor: pointer;
+    }
+}
+
 :where(a, button, input, textarea, select):focus-visible {
-    outline: 3px solid #2563eb;
+    outline: 3px solid var(--focus);
     outline-offset: 3px;
+}
+
+::selection {
+    background: var(--accent-soft);
+    color: var(--foreground);
 }

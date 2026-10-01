@@ -245,13 +245,13 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
             />
 
             {statusError && (
-                <p role="alert" className="text-red-400">
+                <p role="alert" className="text-danger">
                     {statusError}
                 </p>
             )}
 
             {deleteError && (
-                <p role="alert" className="text-red-400">
+                <p role="alert" className="text-danger">
                     {deleteError}
                 </p>
             )}
@@ -263,7 +263,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
             ) : (
                 <ul className="space-y-3">
                     {filteredTasks.map((task) => (
-                        <li key={task.id} className="min-w-0 rounded-lg border p-4">
+                        <li key={task.id} className="min-w-0 rounded-xl border bg-surface p-5 shadow-sm">
                             <h3 className="font-semibold wrap-anywhere">{task.title}</h3>
                             <p className="whitespace-pre-wrap wrap-anywhere">{task.description}</p>
                             <label
@@ -299,7 +299,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                                 onClick={() => setEditingTask(task)}
                                 aria-label={`Edit task: ${task.title}`}
                                 disabled={isBusy}
-                                className="mt-3 block min-h-11 text-sm text-blue-400 hover:text-blue-300 disabled:opacity-50"
+                                className="mt-3 block min-h-11 text-sm text-accent hover:text-accent-hover disabled:opacity-50"
                             >
                                 Edit
                             </button>
@@ -308,7 +308,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
                                 onClick={() => void handleDeleteTask(task.id)}
                                 aria-label={`Delete task: ${task.title}`}
                                 disabled={isBusy}
-                                className="mt-3 block min-h-11 text-sm text-red-400 transition-colors hover:text-red-300 disabled:opacity-50"
+                                className="mt-3 block min-h-11 text-sm text-danger transition-colors hover:text-danger-hover disabled:opacity-50"
                             >
                                 {deletingId === task.id ? "Deleting..." : "Delete"}
                             </button>
