@@ -5,3 +5,7 @@ export type Task = {
     description: string;
     status: "todo" | "in_progress" | "done";
 };
+
+export type TaskWithProject = Task & {
+    projectTitle: string;
+};
