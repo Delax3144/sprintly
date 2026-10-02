@@ -2,6 +2,10 @@
 
 import { useId, useRef, useState, type FormEvent } from "react";
 import type { Project } from "@/types/project";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type ProjectFormProps = {
     onSave: (title: string, description: string) => Promise<void>;
@@ -63,14 +67,14 @@ export default function ProjectForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="mt-4 flex w-full min-w-0 max-w-md flex-col gap-4"
+            className="flex w-full min-w-0 flex-col gap-5"
         >
             <label className="block">
                 <span className="mb-2 block text-sm font-medium">
                     Project name
                 </span>
 
-                <input
+                <Input
                     type="text"
                     ref={titleInputRef}
                     aria-required="true"
@@ -78,7 +82,7 @@ export default function ProjectForm({
                     aria-describedby={titleError ? titleErrorId : undefined}
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    className="min-w-0 w-full rounded-lg border px-3 py-2"
+                    placeholder="e.g. Website refresh"
                     disabled={isDisabled}
                 />
                 {titleError !== "" && (
@@ -93,11 +97,12 @@ export default function ProjectForm({
                     Description (optional)
                 </span>
 
-                <textarea
+                <Textarea
                     rows={3}
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
-                    className="min-w-0 w-full resize-y rounded-lg border px-3 py-2"
+                    className="min-h-28 resize-y"
+                    placeholder="What is this project about?"
                     disabled={isDisabled}
                 />
             </label>
@@ -108,27 +113,22 @@ export default function ProjectForm({
                 </p>
             )}
 
-            <button
-                type="submit"
-                disabled={isDisabled}
-                className="min-h-11 w-full self-start rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-wait disabled:opacity-50 sm:w-auto"
-            >
-                {isSubmitting
-                    ? "Saving…"
-                    : initialProject !== null
-                        ? "Save changes"
-                        : "Add project"}
-            </button>
-            {initialProject !== null && (
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    disabled={isDisabled}
-                    className="min-h-11 w-full self-start text-sm text-muted hover:text-foreground sm:w-auto"
-                >
+            <div className="flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:justify-end">
+                <Button type="button" variant="outline" onClick={onCancel} disabled={isDisabled}>
                     Cancel
-                </button>
-            )}
+                </Button>
+                <Button
+                    type="submit"
+                    disabled={isDisabled}
+                >
+                    {isSubmitting && <Loader2 aria-hidden="true" className="animate-spin" />}
+                    {isSubmitting
+                        ? "Saving…"
+                        : initialProject !== null
+                            ? "Save changes"
+                            : "Create project"}
+                </Button>
+            </div>
         </form>
     );
 }

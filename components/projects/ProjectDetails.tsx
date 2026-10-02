@@ -53,10 +53,10 @@ export default function ProjectDetails({ id }: ProjectDetailsProps) {
 
     return (
         <div>
-            <h1 className="text-2xl font-semibold wrap-anywhere">
+            <h1 className="text-2xl leading-tight font-semibold tracking-tight wrap-anywhere">
                 {project.title}
             </h1>
-            <p className="mt-2 whitespace-pre-wrap wrap-anywhere">
+            <p className="mt-2 max-w-2xl whitespace-pre-wrap text-sm leading-6 text-muted-foreground wrap-anywhere">
                 {project.description}
             </p>
             <ProjectTasks key={project.id} projectId={project.id} />

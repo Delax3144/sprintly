@@ -1,6 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { FolderKanban, Search, ListTodo, SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useGetTasksQuery } from "@/lib/services/tasksApi";
@@ -72,43 +77,31 @@ function TasksContent() {
             <div className="space-y-3">
                 <p role="alert">Could not load tasks.</p>
 
-                <button
+                <Button
                     type="button"
                     onClick={() => void refetch()}
                     disabled={isFetching}
-                    className="rounded-lg border px-4 py-2 disabled:opacity-50"
+                    variant="outline"
                 >
                     {isFetching ? "Loading..." : "Retry"}
-                </button>
+                </Button>
             </div>
         );
     }
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-semibold">My Tasks</h1>
-
             <div>
-                <label htmlFor="status-filter" className="mb-2 block text-sm">
-                    Filter by status
-                </label>
-                <select
-                    id="status-filter"
-                    value={statusFilter}
-                    onChange={(event) =>
-                        handleFilterChange(event.target.value)
-                    }
-                    className="min-h-11 w-full rounded-lg border bg-background p-2 sm:w-auto"
-                >
-                    <option value="all">All statuses</option>
-                    <option value="todo">Todo</option>
-                    <option value="in_progress">In progress</option>
-                    <option value="done">Done</option>
-                </select>
+                <div className="flex items-center gap-3">
+                    <h1 className="text-2xl font-semibold tracking-tight">My Tasks</h1>
+                    <Badge variant="secondary">{tasks.length}</Badge>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">Tasks across all your projects.</p>
             </div>
+            <div className="flex flex-col gap-3 border-b pb-5 sm:flex-row sm:items-center">
 
             <form
-                className="flex w-full max-w-xl flex-col gap-2 sm:flex-row"
+                className="flex w-full gap-2 sm:max-w-sm"
                 onSubmit={(event) => {
                     event.preventDefault();
 
@@ -130,44 +123,53 @@ function TasksContent() {
                     );
                 }}
             >
-                <input
+                <Input
                     key={searchQuery}
                     type="search"
                     name="q"
                     aria-label="Search tasks by title"
                     defaultValue={searchQuery}
                     placeholder="Search tasks..."
-                    className="min-h-11 min-w-0 w-full rounded-lg border p-2 sm:flex-1"
+                    className="min-w-0 flex-1"
                 />
-                <button
+                <Button
                     type="submit"
-                    className="min-h-11 shrink-0 rounded-lg border px-4 py-2"
+                    variant="outline" size="icon" aria-label="Search tasks"
                 >
-                    Search
-                </button>
+                    <Search aria-hidden="true" />
+                </Button>
             </form>
+                <Select value={statusFilter} onValueChange={handleFilterChange}>
+                    <SelectTrigger aria-label="Filter by status" className="w-full sm:w-44">
+                        <SlidersHorizontal aria-hidden="true" className="size-4" /><SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All statuses</SelectItem>
+                        <SelectItem value="todo">Todo</SelectItem>
+                        <SelectItem value="in_progress">In progress</SelectItem>
+                        <SelectItem value="done">Done</SelectItem>
+                    </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground sm:ml-auto">{filteredTasks.length} of {tasks.length} tasks</p>
+            </div>
 
             {tasks.length === 0 ? (
-                <p>No tasks yet.</p>
+                <div className="rounded-lg border border-dashed py-16 text-center"><ListTodo aria-hidden="true" className="mx-auto mb-4 size-8 text-muted-foreground" /><h2 className="font-medium">No tasks yet</h2><p className="mt-2 text-sm text-muted-foreground">Open a project board to create your first task.</p></div>
             ) : filteredTasks.length === 0 ? (
                 <p>No tasks match this filter.</p>
             ) : (
-                <ul className="space-y-4">
+                <ul className="divide-y rounded-lg border bg-card">
                     {filteredTasks.map((task) => (
-                        <li key={task.id} className="min-w-0 rounded-xl border bg-surface p-5 shadow-sm">
-                            <h2 className="font-semibold wrap-anywhere">{task.title}</h2>
-                            <p className="mt-2 whitespace-pre-wrap wrap-anywhere">{task.description}</p>
+                        <li key={task.id} className="min-w-0 p-4 sm:p-5">
+                            <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-sm font-medium wrap-anywhere">{task.title}</h2><Badge variant="secondary" className={task.status === "done" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : task.status === "in_progress" ? "bg-violet-500/10 text-violet-700 dark:text-violet-300" : ""}>{statusLabels[task.status]}</Badge></div>
+                            {task.description && <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground wrap-anywhere">{task.description}</p>}
 
                             <Link
                                 href={`/projects/${encodeURIComponent(task.projectId)}`}
-                                className="mt-3 inline-block text-sm text-accent hover:text-accent-hover wrap-anywhere"
+                                className="mt-3 inline-flex items-center gap-1.5 rounded-sm text-xs text-muted-foreground hover:text-primary wrap-anywhere"
                             >
-                                {task.projectTitle}
+                                <FolderKanban aria-hidden="true" className="size-3.5 shrink-0" />{task.projectTitle}
                             </Link>
-
-                            <p className="mt-2 text-sm">
-                                {statusLabels[task.status]}
-                            </p>
                         </li>
                     ))}
                 </ul>
