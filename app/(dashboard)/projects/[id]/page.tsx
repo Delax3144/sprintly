@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 import ProjectDetails from "@/components/projects/ProjectDetails";
 
@@ -12,12 +13,12 @@ export default async function ProjectPage({
     const { id } = await params;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             <Link
                 href="/projects"
-                className="inline-block text-accent transition-colors hover:text-accent-hover"
+                className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
-                ← Back to projects
+                <ChevronLeft aria-hidden="true" className="size-3.5" /> Projects
             </Link>
 
             <ProjectDetails id={id} />

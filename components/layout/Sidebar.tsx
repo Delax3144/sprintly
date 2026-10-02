@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FolderKanban, LayoutDashboard, ListTodo, Layers2 } from "lucide-react";
 
 const navigation = [
-    { href: "/", label: "Dashboard", symbol: "D" },
-    { href: "/projects", label: "Projects", symbol: "P" },
-    { href: "/tasks", label: "My Tasks", symbol: "T" },
+    { href: "/", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/projects", label: "Projects", icon: FolderKanban },
+    { href: "/tasks", label: "My Tasks", icon: ListTodo },
 ];
 
 export default function Sidebar() {
@@ -17,11 +18,11 @@ export default function Sidebar() {
             <Link href="/" className="inline-flex items-center gap-3 rounded-lg">
                 <span
                     aria-hidden="true"
-                    className="flex size-9 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white"
+                    className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
                 >
-                    S
+                    <Layers2 className="size-4" />
                 </span>
-                <span className="text-lg font-bold tracking-tight">Sprintly</span>
+                <span className="text-base font-semibold tracking-tight">Sprintly</span>
             </Link>
 
             <nav
@@ -39,17 +40,17 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             aria-current={exact ? "page" : active ? "location" : undefined}
-                            className={`flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
+                            className={`flex min-h-9 items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                                 active
-                                    ? "bg-accent-soft text-accent"
-                                    : "text-muted hover:bg-surface-hover hover:text-foreground"
+                                    ? "bg-accent-soft text-primary"
+                                    : "text-muted-foreground hover:bg-surface-hover hover:text-foreground"
                             }`}
                         >
                             <span
                                 aria-hidden="true"
-                                className="hidden size-6 items-center justify-center rounded-md border text-xs md:flex"
+                                className="hidden md:block"
                             >
-                                {item.symbol}
+                                <item.icon className="size-4" />
                             </span>
                             {item.label}
                         </Link>

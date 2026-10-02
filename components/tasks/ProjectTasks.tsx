@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     usePathname,
     useRouter,
     useSearchParams,
 } from "next/navigation";
 
+import { Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+    Dialog, DialogContent, DialogDescription, DialogHeader,
+    DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+    Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import type { Task } from "@/types/task";
 
 import {
@@ -17,6 +28,7 @@ import {
     useUpdateTaskMutation,
 } from "@/lib/services/tasksApi";
 import TaskForm from "@/components/tasks/TaskForm";
+import KanbanBoard from "@/components/tasks/KanbanBoard";
 
 type ProjectTasksProps = {
     projectId: string;
@@ -36,6 +48,8 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
     const [createTask, { isLoading: isCreating }] = useCreateTaskMutation();
 
     const [statusError, setStatusError] = useState("");
+    const [moveMessage, setMoveMessage] = useState("");
+    const statusRequestPending = useRef(false);
     const [updateTaskStatus, { isLoading: isUpdating }] =
         useUpdateTaskStatusMutation();
 
@@ -44,6 +58,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
     const [deleteError, setDeleteError] = useState("");
 
     const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [isFormOpen, setIsFormOpen] = useState(false);
     const [updateTask, { isLoading: isSaving }] = useUpdateTaskMutation();
 
     const isBusy = isCreating || isUpdating || isDeleting || isSaving || isFetching;
@@ -58,19 +73,26 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
             title,
             description,
         }).unwrap();
+        setIsFormOpen(false);
     }
 
     async function handleStatusChange(id: string, status: Task["status"]) {
-        if (isBusy) {
+        if (isBusy || statusRequestPending.current) {
             return;
         }
 
+        statusRequestPending.current = true;
         setStatusError("");
+        setMoveMessage("");
 
         try {
             await updateTaskStatus({ id, status }).unwrap();
+            const label = status === "todo" ? "Todo" : status === "done" ? "Done" : "In progress";
+            setMoveMessage(`Task moved to ${label}.`);
         } catch {
-            setStatusError("Could not update task status. Please try again.");
+            setStatusError("Could not move task. Please try again.");
+        } finally {
+            statusRequestPending.current = false;
         }
     }
 
@@ -106,6 +128,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
         }).unwrap();
 
         setEditingTask(null);
+        setIsFormOpen(false);
     }
 
     const router = useRouter();
@@ -151,7 +174,7 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
         return <p>Loading tasks...</p>;
     }
 
-    if (error) {
+    if (error && !isFormOpen) {
         return (
             <div className="mt-6 space-y-3">
                 <p role="alert">Could not load tasks.</p>
@@ -168,154 +191,128 @@ export default function ProjectTasks({ projectId }: ProjectTasksProps) {
     }
 
     return (
-        <section className="mt-6 space-y-4">
-            <h2 className="text-xl font-semibold">Tasks</h2>
-
-            <div>
-                <label htmlFor="task-filter" className="mb-2 block text-sm">
-                    Filter by status
-                </label>
-                <select
-                    id="task-filter"
-                    value={
-                        statusFilter === "todo" ||
-                        statusFilter === "in_progress" ||
-                        statusFilter === "done"
-                            ? statusFilter
-                            : "all"
-                    }
-                    onChange={(event) =>
-                        handleFilterChange(event.target.value)
-                    }
-                    className="min-h-11 w-full rounded-lg border bg-background p-2 sm:w-auto"
-                >
-                    <option value="all">All statuses</option>
-                    <option value="todo">Todo</option>
-                    <option value="in_progress">In progress</option>
-                    <option value="done">Done</option>
-                </select>
-            </div>
-
-            <form
-                className="flex w-full max-w-xl flex-col gap-2 sm:flex-row"
-                onSubmit={(event) => {
-                    event.preventDefault();
-
-                    const formData = new FormData(event.currentTarget);
-                    const query = String(formData.get("q") ?? "").trim();
-                    const params = new URLSearchParams(searchParams.toString());
-
-                    if (query) {
-                        params.set("q", query);
-                    } else {
-                        params.delete("q");
-                    }
-
-                    const queryString = params.toString();
-
-                    router.replace(
-                        queryString ? `${pathname}?${queryString}` : pathname,
-                        { scroll: false }
-                    );
+        <section className="mt-8 space-y-5">
+            <Dialog
+                open={isFormOpen}
+                onOpenChange={(open) => {
+                    if (isCreating || isSaving) return;
+                    setIsFormOpen(open);
+                    if (!open) setEditingTask(null);
                 }}
             >
-                <input
-                    key={searchQuery}
-                    type="search"
-                    name="q"
-                    aria-label="Search tasks by title"
-                    defaultValue={searchQuery}
-                    placeholder="Search tasks..."
-                    className="min-h-11 min-w-0 w-full rounded-lg border p-2 sm:flex-1"
-                />
-                <button
-                    type="submit"
-                    className="min-h-11 shrink-0 rounded-lg border px-4 py-2"
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+                    <div className="flex items-center gap-2.5">
+                        <h2 className="text-base font-semibold">Board</h2>
+                        <Badge variant="secondary" className="rounded-md px-2 font-normal">
+                            {tasks.length} {tasks.length === 1 ? "task" : "tasks"}
+                        </Badge>
+                    </div>
+                    <DialogTrigger asChild>
+                        <Button disabled={isBusy} onClick={() => setEditingTask(null)}>
+                            <Plus aria-hidden="true" /> New task
+                        </Button>
+                    </DialogTrigger>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <form
+                        className="flex w-full gap-2 sm:max-w-sm"
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            const formData = new FormData(event.currentTarget);
+                            const query = String(formData.get("q") ?? "").trim();
+                            const params = new URLSearchParams(searchParams.toString());
+                            if (query) params.set("q", query);
+                            else params.delete("q");
+                            const queryString = params.toString();
+                            router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+                        }}
+                    >
+                        <div className="relative min-w-0 flex-1">
+                            <Search aria-hidden="true" className="pointer-events-none absolute top-2.5 left-3 size-4 text-muted-foreground" />
+                            <Input
+                                key={searchQuery}
+                                type="search"
+                                name="q"
+                                aria-label="Search tasks by title"
+                                defaultValue={searchQuery}
+                                placeholder="Search tasks..."
+                                className="bg-card pl-9"
+                            />
+                        </div>
+                        <Button type="submit" variant="outline" size="icon" aria-label="Search tasks">
+                            <Search aria-hidden="true" />
+                        </Button>
+                    </form>
+                    <Select
+                        value={statusFilter === "todo" || statusFilter === "in_progress" || statusFilter === "done" ? statusFilter : "all"}
+                        onValueChange={handleFilterChange}
+                    >
+                        <SelectTrigger className="w-full bg-card sm:w-44" aria-label="Filter by status">
+                            <SlidersHorizontal aria-hidden="true" className="size-3.5 text-muted-foreground" />
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All statuses</SelectItem>
+                            <SelectItem value="todo">Todo</SelectItem>
+                            <SelectItem value="in_progress">In progress</SelectItem>
+                            <SelectItem value="done">Done</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground sm:ml-auto">
+                        {filteredTasks.length} of {tasks.length} tasks
+                    </p>
+                </div>
+
+                <DialogContent
+                    className="max-h-[85dvh] overflow-y-auto bg-card sm:max-w-lg"
+                    showCloseButton={!isCreating && !isSaving}
+                    onEscapeKeyDown={(event) => {
+                        if (isCreating || isSaving) event.preventDefault();
+                    }}
+                    onPointerDownOutside={(event) => {
+                        if (isCreating || isSaving) event.preventDefault();
+                    }}
                 >
-                    Search
-                </button>
-            </form>
+                    <DialogHeader>
+                        <DialogTitle>{editingTask ? "Edit task" : "New task"}</DialogTitle>
+                        <DialogDescription>
+                            {editingTask ? "Update the task name and description." : "Add a task to this project. It will start in Todo."}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <TaskForm
+                        key={editingTask?.id ?? "create"}
+                        initialTask={editingTask}
+                        onSave={editingTask ? handleUpdateTask : handleCreateTask}
+                        disabled={isBusy}
+                        onCancel={() => {
+                            setIsFormOpen(false);
+                            setEditingTask(null);
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
 
-            <TaskForm
-                key={editingTask?.id ?? "create"}
-                initialTask={editingTask}
-                onSave={editingTask ? handleUpdateTask : handleCreateTask}
+            {(statusError || deleteError) && (
+                <p role="alert" className="rounded-md border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">
+                    {statusError || deleteError}
+                </p>
+            )}
+            <p role="status" className="sr-only">{moveMessage}</p>
+            {tasks.length > 0 && filteredTasks.length === 0 && (
+                <p className="text-sm text-muted-foreground">No tasks match this filter.</p>
+            )}
+            <KanbanBoard
+                tasks={filteredTasks}
                 disabled={isBusy}
-                onCancel={() => setEditingTask(null)}
+                deletingId={deletingId}
+                onStatusChange={handleStatusChange}
+                onEdit={(task) => {
+                    setEditingTask(task);
+                    setIsFormOpen(true);
+                }}
+                onDelete={handleDeleteTask}
             />
-
-            {statusError && (
-                <p role="alert" className="text-danger">
-                    {statusError}
-                </p>
-            )}
-
-            {deleteError && (
-                <p role="alert" className="text-danger">
-                    {deleteError}
-                </p>
-            )}
-
-            {tasks.length === 0 ? (
-                <p>No tasks yet.</p>
-            ) : filteredTasks.length === 0 ? (
-                <p>No tasks match this filter.</p>
-            ) : (
-                <ul className="space-y-3">
-                    {filteredTasks.map((task) => (
-                        <li key={task.id} className="min-w-0 rounded-xl border bg-surface p-5 shadow-sm">
-                            <h3 className="font-semibold wrap-anywhere">{task.title}</h3>
-                            <p className="whitespace-pre-wrap wrap-anywhere">{task.description}</p>
-                            <label
-                                htmlFor={`task-status-${task.id}`}
-                                className="mt-3 block text-sm"
-                            >
-                                Status
-                            </label>
-                            <select
-                                id={`task-status-${task.id}`}
-                                aria-label={`Status for task: ${task.title}`}
-                                value={task.status}
-                                disabled={isBusy}
-                                onChange={(event) => {
-                                    const status = event.target.value;
-
-                                    if (
-                                        status === "todo" ||
-                                        status === "in_progress" ||
-                                        status === "done"
-                                    ) {
-                                        void handleStatusChange(task.id, status);
-                                    }
-                                }}
-                                className="mt-1 min-h-11 w-full rounded-lg border bg-background p-2 sm:w-auto"
-                            >
-                                <option value="todo">Todo</option>
-                                <option value="in_progress">In progress</option>
-                                <option value="done">Done</option>
-                            </select>
-                            <button
-                                type="button"
-                                onClick={() => setEditingTask(task)}
-                                aria-label={`Edit task: ${task.title}`}
-                                disabled={isBusy}
-                                className="mt-3 block min-h-11 text-sm text-accent hover:text-accent-hover disabled:opacity-50"
-                            >
-                                Edit
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => void handleDeleteTask(task.id)}
-                                aria-label={`Delete task: ${task.title}`}
-                                disabled={isBusy}
-                                className="mt-3 block min-h-11 text-sm text-danger transition-colors hover:text-danger-hover disabled:opacity-50"
-                            >
-                                {deletingId === task.id ? "Deleting..." : "Delete"}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
         </section>
     );
 }

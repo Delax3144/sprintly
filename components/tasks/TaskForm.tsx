@@ -1,6 +1,11 @@
 "use client";
 
 import { useId, useRef, useState, type FormEvent } from "react";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 import type { Task } from "@/types/task";
 
@@ -60,12 +65,12 @@ export default function TaskForm({
     }
 
     return (
-        <form onSubmit={handleSubmit} className="w-full min-w-0 max-w-xl space-y-4">
-            <div>
-                <label htmlFor="task-title" className="mb-2 block">
+        <form onSubmit={handleSubmit} className="w-full min-w-0 space-y-5">
+            <div className="space-y-2">
+                <Label htmlFor="task-title">
                     Task name
-                </label>
-                <input
+                </Label>
+                <Input
                     id="task-title"
                     ref={titleInputRef}
                     aria-required="true"
@@ -74,7 +79,7 @@ export default function TaskForm({
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
                     disabled={isDisabled}
-                    className="min-w-0 w-full rounded-lg border p-3"
+                    placeholder="What needs to be done?"
                 />
                 {titleError && (
                     <p id={titleErrorId} role="alert" className="mt-2 text-danger">
@@ -83,17 +88,18 @@ export default function TaskForm({
                 )}
             </div>
 
-            <div>
-                <label htmlFor="task-description" className="mb-2 block">
-                    Description (optional)
-                </label>
-                <textarea
+            <div className="space-y-2">
+                <Label htmlFor="task-description">
+                    Description <span className="font-normal text-muted-foreground">(optional)</span>
+                </Label>
+                <Textarea
                     id="task-description"
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
                     disabled={isDisabled}
-                    rows={3}
-                    className="min-w-0 w-full resize-y rounded-lg border p-3"
+                    rows={4}
+                    placeholder="Add details or context..."
+                    className="min-h-28 resize-y"
                 />
             </div>
 
@@ -103,27 +109,17 @@ export default function TaskForm({
                 </p>
             )}
 
-            <button
-                type="submit"
-                disabled={isDisabled}
-                className="min-h-11 w-full rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opacity-50 sm:w-auto"
-            >
-                {isSubmitting
-                    ? "Saving..."
-                    : initialTask
-                        ? "Save changes"
-                        : "Add task"}
-            </button>
-            {initialTask && onCancel && (
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    disabled={isDisabled}
-                    className="block min-h-11 w-full text-sm text-muted hover:text-foreground sm:w-auto"
-                >
-                    Cancel
-                </button>
-            )}
+            <div className="flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:justify-end">
+                {onCancel && (
+                    <Button type="button" variant="outline" onClick={onCancel} disabled={isDisabled}>
+                        Cancel
+                    </Button>
+                )}
+                <Button type="submit" disabled={isDisabled}>
+                    {isSubmitting && <Loader2 aria-hidden="true" className="animate-spin" />}
+                    {isSubmitting ? "Saving..." : initialTask ? "Save changes" : "Create task"}
+                </Button>
+            </div>
         </form>
     );
 }

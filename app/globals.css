@@ -1,19 +1,24 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 :root {
     color-scheme: light;
-    --background: #f4f6fb;
-    --foreground: #1c263b;
+    --background: #fafafa;
+    --foreground: #20232b;
     --surface: #ffffff;
-    --surface-hover: #edf1f8;
-    --border: #dce3ee;
-    --muted: #59677e;
-    --accent: #4338ca;
+    --surface-hover: #f0f1f4;
+    --border: #e5e7eb;
+    --muted: #647084;
+    --accent: #4f46e5;
     --accent-hover: #3730a3;
     --accent-soft: #eeecff;
     --danger: #b4233e;
     --danger-hover: #911c32;
     --focus: #6366f1;
+    --primary-foreground: #ffffff;
+    --radius: 0.5rem;
 }
 
 @theme inline {
@@ -22,21 +27,38 @@
     --color-surface: var(--surface);
     --color-surface-hover: var(--surface-hover);
     --color-border: var(--border);
-    --color-muted: var(--muted);
-    --color-accent: var(--accent);
+    --color-muted: var(--surface-hover);
+    --color-muted-foreground: var(--muted);
+    --color-accent: var(--surface-hover);
+    --color-accent-foreground: var(--foreground);
     --color-accent-hover: var(--accent-hover);
     --color-accent-soft: var(--accent-soft);
     --color-danger: var(--danger);
     --color-danger-hover: var(--danger-hover);
+    --color-card: var(--surface);
+    --color-card-foreground: var(--foreground);
+    --color-popover: var(--surface);
+    --color-popover-foreground: var(--foreground);
+    --color-primary: var(--accent);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--surface-hover);
+    --color-secondary-foreground: var(--foreground);
+    --color-destructive: var(--danger);
+    --color-input: var(--border);
+    --color-ring: var(--focus);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
 }
 
 :root[data-theme="dark"] {
     color-scheme: dark;
-    --background: #101522;
-    --foreground: #e7edf7;
-    --surface: #192131;
-    --surface-hover: #232e42;
-    --border: #334058;
+    --background: #111318;
+    --foreground: #eef0f5;
+    --surface: #1a1d24;
+    --surface-hover: #242832;
+    --border: #303640;
     --muted: #a6b2c8;
     --accent: #b5adff;
     --accent-hover: #d0caff;
@@ -44,12 +66,15 @@
     --danger: #ff94a5;
     --danger-hover: #ffbdc8;
     --focus: #b5adff;
+    --primary-foreground: #19152f;
 }
 
 body {
     background: var(--background);
     color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 @layer base {
@@ -72,9 +97,9 @@ body {
     }
 }
 
-:where(a, button, input, textarea, select):focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 3px;
+:where(a, button, input, textarea, select, summary, [tabindex]):not([data-slot]):focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
 }
 
 ::selection {
